@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <feature url="features/com.cts.plugin.eclipse.loc.feature_1.0.0.qualifier.jar"
+             id="eclipse-loc-plugin-feature"
+             version="0.0.0">
+        <category name="com.cts.plugin.eclipse.loc.category"/>
+    </feature>
+    <category-def name="com.cts.plugin.eclipse.loc.category" label="GenAI LOC Tracker">
+        <description>
+            Tracks Lines of Code (LOC) generated with GitHub Copilot inside Eclipse,
+            posting events to the GenAI LOC Spring Boot service.
+        </description>
+    </category-def>
+</site>

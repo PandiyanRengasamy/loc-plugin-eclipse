@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='org.eclipse.update.feature' id='eclipse-loc-plugin-feature' version='1.0.0.202605251227'>
+    <properties size='10'>
+      <property name='artifact.size' value='1691'/>
+      <property name='download.size' value='1691'/>
+      <property name='download.checksum.sha-512' value='944dc55f8b08fcc504b856eea989280a8f45b7d2b71e499e4c17ae5007143cb3316305ed921e7cbbf713897f201b6cf5116b1c9f3ace95e3852e41d544198e77'/>
+      <property name='download.checksum.sha-1' value='66dece543f087f90e94bdd6526149126485ca823'/>
+      <property name='download.checksum.sha-256' value='d7fab7068f7449556e353a181cc65fabfe5da8cef03fd60d6f0e22230157a58b'/>
+      <property name='maven-groupId' value='com.cts.plugin.eclipse'/>
+      <property name='maven-artifactId' value='eclipse-loc-plugin-feature'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      <property name='maven-type' value='eclipse-feature'/>
+      <property name='download.contentType' value='application/zip'/>
+    </properties>
+  </artifact>
+</artifacts>

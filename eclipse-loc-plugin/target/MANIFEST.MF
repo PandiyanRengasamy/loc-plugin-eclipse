@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse GenAI LOC Tracker
+Bundle-SymbolicName: com.cts.plugin.eclipse.loc;singleton:=true
+Bundle-Version: 1.0.0.202605251227
+Bundle-Activator: com.cts.plugin.eclipse.loc.EclipseLocPlugin
+Bundle-Vendor: CTS
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.core
+ .resources,org.eclipse.ui.workbench.texteditor,org.eclipse.jface.text,o
+ rg.eclipse.ui.editors,org.eclipse.ui.ide,com.google.gson
+Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: com.cts.plugin.eclipse.loc
+Export-Package: com.cts.plugin.eclipse.loc,com.cts.plugin.eclipse.loc.ac
+ tion,com.cts.plugin.eclipse.loc.listeners,com.cts.plugin.eclipse.loc.mo
+ del,com.cts.plugin.eclipse.loc.service,com.cts.plugin.eclipse.loc.setti
+ ngs,com.cts.plugin.eclipse.loc.startup,com.cts.plugin.eclipse.loc.views
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
+

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        Eclipse GenAI LOC Tracker — Tycho aggregator.
+
+        Build:   mvn clean verify
+        Output:
+          eclipse-loc-plugin/target/*.jar
+              → drop into Eclipse 'dropins/' for one-shot install
+          eclipse-loc-plugin-repository/target/repository/
+              → p2 update site directory
+          eclipse-loc-plugin-repository/target/*.zip
+              → zipped update site for Help → Install New Software → Add → Archive
+    -->
+
+    <groupId>com.cts.plugin.eclipse</groupId>
+    <artifactId>eclise-loc-plugin-claude-export</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <tycho.version>4.0.8</tycho.version>
+        <eclipse.release>2024-12</eclipse.release>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jarsigner.keystore>${maven.multiModuleProjectDirectory}/cts-signing.jks</jarsigner.keystore>
+        <jarsigner.alias>cts-loc-plugin</jarsigner.alias>
+        <jarsigner.storepass>changeit</jarsigner.storepass>
+        <jarsigner.keypass>changeit</jarsigner.keypass>
+    </properties>
+
+    <modules>
+        <module>eclipse-loc-plugin</module>
+        <module>eclipse-loc-plugin-feature</module>
+        <module>eclipse-loc-plugin-repository</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>eclipse-release</id>
+            <layout>p2</layout>
+            <url>https://download.eclipse.org/releases/${eclipse.release}/</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>${tycho.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tycho.version}</version>
+                <configuration>
+                    <environments>
+                        <environment>
+                            <os>win32</os>
+                            <ws>win32</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>linux</os>
+                            <ws>gtk</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>macosx</os>
+                            <ws>cocoa</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                    </environments>
+                    <executionEnvironment>JavaSE-17</executionEnvironment>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-source-plugin</artifactId>
+                <version>${tycho.version}</version>
+                <executions>
+                    <execution>
+                        <id>plugin-source</id>
+                        <goals>
+                            <goal>plugin-source</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>sign</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keystore>${jarsigner.keystore}</keystore>
+                    <alias>${jarsigner.alias}</alias>
+                    <storepass>${jarsigner.storepass}</storepass>
+                    <keypass>${jarsigner.keypass}</keypass>
+                    <tsa>http://timestamp.digicert.com</tsa>
+                    <removeExistingSignatures>true</removeExistingSignatures>
+                    <processMainArtifact>true</processMainArtifact>
+                    <processAttachedArtifacts>true</processAttachedArtifacts>
+                    <skip>${skip.signing}</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>no-sign</id>
+            <activation>
+                <property>
+                    <name>skip.signing</name>
+                    <value>true</value>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
+</project>

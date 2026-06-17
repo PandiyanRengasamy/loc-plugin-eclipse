@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <!-- ── Startup: register listeners as soon as Eclipse loads ────────────── -->
+   <extension point="org.eclipse.ui.startup">
+      <startup class="com.cts.plugin.eclipse.loc.startup.EclipseLocStartup"/>
+   </extension>
+
+   <!-- ── Preferences page: Window → Preferences → GenAI LOC Tracker ──────── -->
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+         id="com.cts.plugin.eclipse.loc.settings.GenAiLocPreferencePage"
+         name="GenAI LOC Tracker"
+         class="com.cts.plugin.eclipse.loc.settings.GenAiLocPreferencePage"/>
+   </extension>
+
+   <!-- ── Commands ──────────────────────────────────────────────────────────── -->
+   <extension point="org.eclipse.ui.commands">
+      <command
+         id="com.cts.plugin.eclipse.loc.sendNow"
+         name="Send LOC Data Now"
+         description="Manually flush LOC events to the backend service"/>
+      <command
+         id="com.cts.plugin.eclipse.loc.testBackend"
+         name="Test Backend Connection"
+         description="Sends a synthetic LOC event to verify the backend URL is reachable"/>
+      <command
+         id="com.cts.plugin.eclipse.loc.openReport"
+         name="Show LOC Report"
+         description="Open the GenAI LOC Report view (summary cards + events table)"/>
+   </extension>
+
+   <!-- ── Command images: icon shown in menus / toolbars per command ───────── -->
+   <extension point="org.eclipse.ui.commandImages">
+      <image commandId="com.cts.plugin.eclipse.loc.sendNow" icon="icons/loc_icon.png"/>
+      <image commandId="com.cts.plugin.eclipse.loc.testBackend" icon="icons/loc_icon.png"/>
+      <image commandId="com.cts.plugin.eclipse.loc.openReport" icon="icons/loc_icon.png"/>
+   </extension>
+
+   <!-- ── Handlers ──────────────────────────────────────────────────────────── -->
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+         commandId="com.cts.plugin.eclipse.loc.sendNow"
+         class="com.cts.plugin.eclipse.loc.action.SendNowHandler"/>
+      <handler
+         commandId="com.cts.plugin.eclipse.loc.testBackend"
+         class="com.cts.plugin.eclipse.loc.action.TestBackendHandler"/>
+      <handler
+         commandId="com.cts.plugin.eclipse.loc.openReport"
+         class="com.cts.plugin.eclipse.loc.action.OpenLocReportHandler"/>
+   </extension>
+
+   <!-- ── Views: register the LOC Report view under "GenAI LOC Tracker" ─────── -->
+   <extension point="org.eclipse.ui.views">
+      <category
+         id="com.cts.plugin.eclipse.loc.viewCategory"
+         name="GenAI LOC Tracker"/>
+      <view
+         id="com.cts.plugin.eclipse.loc.views.LocReportView"
+         name="GenAI LOC Report"
+         category="com.cts.plugin.eclipse.loc.viewCategory"
+         class="com.cts.plugin.eclipse.loc.views.LocReportView"
+         icon="icons/loc_icon.png"
+         restorable="true"/>
+   </extension>
+
+   <!-- ── Menu: top-level "GenAI LOC" menu ──────────────────────────────────── -->
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu id="com.cts.plugin.eclipse.loc.menu" label="GenAI LOC">
+            <command
+               commandId="com.cts.plugin.eclipse.loc.sendNow"
+               label="Send LOC Data Now"
+               tooltip="Flush pending LOC events to the REST service"/>
+            <command
+               commandId="com.cts.plugin.eclipse.loc.testBackend"
+               label="Test Backend Connection"
+               tooltip="Send a synthetic event to verify the backend is reachable"/>
+            <separator name="reportSeparator" visible="true"/>
+            <command
+               commandId="com.cts.plugin.eclipse.loc.openReport"
+               label="Show LOC Report"
+               tooltip="Open the GenAI LOC Report view"/>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>

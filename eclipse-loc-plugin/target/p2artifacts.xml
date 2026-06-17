@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='2'>
+  <artifact classifier='osgi.bundle' id='com.cts.plugin.eclipse.loc' version='1.0.0.202605251227'>
+    <properties size='9'>
+      <property name='artifact.size' value='88820'/>
+      <property name='download.size' value='88820'/>
+      <property name='download.checksum.sha-512' value='6030a3ff6d4a0f09c52e7f109353130add2c525a881ee565820b4ac0d186606dae9ee3239d4684e0a3c245ba4bea8fc4791989152608022f955493f7b988a7a9'/>
+      <property name='download.checksum.sha-1' value='39085c6f2014817c203fb0e5e36c01a831590e9b'/>
+      <property name='download.checksum.sha-256' value='c32751a6af5cc79ac14fa9a43ef3bb320d5550fb5645a87be430d3d61762d13e'/>
+      <property name='maven-groupId' value='com.cts.plugin.eclipse'/>
+      <property name='maven-artifactId' value='com.cts.plugin.eclipse.loc'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      <property name='maven-type' value='eclipse-plugin'/>
+    </properties>
+  </artifact>
+  <artifact classifier='osgi.bundle' id='com.cts.plugin.eclipse.loc.source' version='1.0.0.202605251227'>
+    <properties size='10'>
+      <property name='artifact.size' value='28692'/>
+      <property name='download.size' value='28692'/>
+      <property name='download.checksum.sha-512' value='2590a70da78b4e8a668b4ca8f9d9ea9e68977f0e1e17d4166575899fa137d3756f95099045f7b59fc818c0b094abab1df4f9cb7dd7e448ce783fadfe0c728be9'/>
+      <property name='download.checksum.sha-1' value='8a3fb60bb816ea620fa062e119ea0fa6c0ce3a08'/>
+      <property name='download.checksum.sha-256' value='f01ace3eccbec52b485a8998af5fb5db0756dff2ec946d56969f26213664b14b'/>
+      <property name='maven-groupId' value='com.cts.plugin.eclipse'/>
+      <property name='maven-artifactId' value='com.cts.plugin.eclipse.loc'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources'/>
+      <property name='maven-type' value='java-source'/>
+    </properties>
+  </artifact>
+</artifacts>

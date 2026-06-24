@@ -1,0 +1,39 @@
+# ── Build output ─────────────────────────────────────────────
+target/
+bin/
+build.log
+
+# ── Eclipse / PDE metadata ───────────────────────────────────
+.project
+.classpath
+.settings/
+.metadata/
+.recommenders/
+.apt_generated/
+local.properties
+
+# Tycho / p2 generated artifacts
+**/target/repository/
+**/target/p2*.xml
+**/target/local-artifacts.properties
+**/target/skippedP2Dependencies.txt
+
+# ── Signing / secrets ────────────────────────────────────────
+*.jks
+*.keystore
+*.p12
+*.pfx
+
+# ── Java ─────────────────────────────────────────────────────
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# ── OS / editor noise ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*~
+

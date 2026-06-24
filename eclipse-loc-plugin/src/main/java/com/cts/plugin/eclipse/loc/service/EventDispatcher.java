@@ -175,11 +175,14 @@ public class EventDispatcher {
         payload.put("eventTimestamp",       e.getEventTimestamp());
         payload.put("sessionId",            e.getSessionId());
         payload.put("fileChanges",          e.getFileChanges());
+        payload.put("inputTokens",          e.getInputTokens());
+        payload.put("outputTokens",         e.getOutputTokens());
         String json = GSON.toJson(payload);
         LOG.info("GenAI-LOC | buildPayload: file=" + e.getFileName()
                 + " fileChanges=" + e.getFileChanges().size()
                 + " +=" + e.getLinesAdded() + " ~=" + e.getLinesModified()
-                + " -=" + e.getLinesDeleted());
+                + " -=" + e.getLinesDeleted()
+                + " inTok=" + e.getInputTokens() + " outTok=" + e.getOutputTokens());
         return json;
     }
 

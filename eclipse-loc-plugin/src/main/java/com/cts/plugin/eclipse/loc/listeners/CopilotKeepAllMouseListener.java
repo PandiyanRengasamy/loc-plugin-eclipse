@@ -4,6 +4,7 @@ import com.cts.plugin.eclipse.loc.model.FileChange;
 import com.cts.plugin.eclipse.loc.model.LOCRequestPayload;
 import com.cts.plugin.eclipse.loc.service.EventDispatcher;
 import com.cts.plugin.eclipse.loc.settings.GenAiLocSettings;
+import com.cts.plugin.eclipse.loc.util.TokenEstimator;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
@@ -164,7 +165,16 @@ public class CopilotKeepAllMouseListener implements AWTEventListener {
                         + "  ~lines=" + linesMod);
 
                 if (linesAdded == 0 && linesDeleted == 0 && linesMod == 0) continue;
-                diffs.add(new FileDiff(post, linesAdded, linesMod, linesDeleted));
+
+                // ── Token estimation (input/output) ───────────────────────────
+                int inputTokens  = TokenEstimator.estimateInputTokens(preChars);
+                int outputTokens = TokenEstimator.estimateOutputTokens(
+                        linesAdded, linesMod, charDelta, avgCharsPerLine);
+                LOG.info("GenAI-LOC |   TOKENS file=" + post.fileName
+                        + "  inputTokens=" + inputTokens + "  outputTokens=" + outputTokens);
+
+                diffs.add(new FileDiff(post, linesAdded, linesMod, linesDeleted,
+                        inputTokens, outputTokens));
             }
 
             if (diffs.isEmpty()) {
@@ -191,12 +201,15 @@ public class CopilotKeepAllMouseListener implements AWTEventListener {
                         ? d.snap.fileName.substring(0, d.snap.fileName.lastIndexOf('.'))
                         : d.snap.fileName;
                 allFileChanges.add(new FileChange(d.snap.filePath, d.snap.fileName, cls,
-                        d.linesAdded, d.linesModified, d.linesDeleted));
+                        d.linesAdded, d.linesModified, d.linesDeleted,
+                        d.inputTokens, d.outputTokens));
             }
 
             int totalAdded    = allFileChanges.stream().mapToInt(FileChange::getLinesAdded).sum();
             int totalModified = allFileChanges.stream().mapToInt(FileChange::getLinesModified).sum();
             int totalDeleted  = allFileChanges.stream().mapToInt(FileChange::getLinesDeleted).sum();
+            int totalInputTokens  = allFileChanges.stream().mapToInt(FileChange::getInputTokens).sum();
+            int totalOutputTokens = allFileChanges.stream().mapToInt(FileChange::getOutputTokens).sum();
 
             FileChange first = allFileChanges.get(0);
             LOCRequestPayload bundled = new LOCRequestPayload(
@@ -205,9 +218,12 @@ public class CopilotKeepAllMouseListener implements AWTEventListener {
                     "ECLIPSE", tool, "BROWNFIELD",
                     totalAdded, totalModified, totalDeleted,
                     true, 0.95, timestamp, sessionId, allFileChanges);
+            bundled.setInputTokens(totalInputTokens);
+            bundled.setOutputTokens(totalOutputTokens);
 
             LOG.info("GenAI-LOC | ENQUEUE bundled: files=" + allFileChanges.size()
-                    + " +=" + totalAdded + " ~=" + totalModified + " -=" + totalDeleted);
+                    + " +=" + totalAdded + " ~=" + totalModified + " -=" + totalDeleted
+                    + " inTok=" + totalInputTokens + " outTok=" + totalOutputTokens);
             dispatcher.enqueue(bundled);
             dispatcher.flushNow();
 
@@ -231,8 +247,10 @@ public class CopilotKeepAllMouseListener implements AWTEventListener {
     private static class FileDiff {
         final EditorSnapshot snap;
         final int linesAdded, linesModified, linesDeleted;
-        FileDiff(EditorSnapshot s, int a, int m, int d) {
+        final int inputTokens, outputTokens;
+        FileDiff(EditorSnapshot s, int a, int m, int d, int inTok, int outTok) {
             snap = s; linesAdded = a; linesModified = m; linesDeleted = d;
+            inputTokens = inTok; outputTokens = outTok;
         }
     }
 

@@ -37,6 +37,10 @@ public class LOCRequestPayload {
     private String  eventTimestamp;
     private String  sessionId;
     private List<FileChange> fileChanges;
+    /** Aggregated estimated LLM input (prompt) tokens across all files in this event. */
+    private int     inputTokens;
+    /** Aggregated estimated LLM output (completion) tokens across all files in this event. */
+    private int     outputTokens;
 
     // ── Multi-file constructor ────────────────────────────────────────────────
 
@@ -89,12 +93,19 @@ public class LOCRequestPayload {
     public String  getEventTimestamp()       { return eventTimestamp; }
     public String  getSessionId()            { return sessionId; }
     public List<FileChange> getFileChanges() { return fileChanges; }
+    public int     getInputTokens()          { return inputTokens; }
+    public int     getOutputTokens()         { return outputTokens; }
+
+    public void setInputTokens(int inputTokens)   { this.inputTokens = inputTokens; }
+    public void setOutputTokens(int outputTokens) { this.outputTokens = outputTokens; }
 
     public LOCRequestPayload addFileChange(FileChange fc) {
         this.fileChanges.add(fc);
         this.linesAdded    += fc.getLinesAdded();
         this.linesModified += fc.getLinesModified();
         this.linesDeleted  += fc.getLinesDeleted();
+        this.inputTokens   += fc.getInputTokens();
+        this.outputTokens  += fc.getOutputTokens();
         return this;
     }
 
@@ -102,7 +113,8 @@ public class LOCRequestPayload {
     public String toString() {
         return "LOCRequestPayload{dev=" + developerId + " project=" + projectId
                 + " file=" + fileName + " tool=" + genAiTool
-                + " +=" + linesAdded + " ~=" + linesModified + " -=" + linesDeleted + "}";
+                + " +=" + linesAdded + " ~=" + linesModified + " -=" + linesDeleted
+                + " inTok=" + inputTokens + " outTok=" + outputTokens + "}";
     }
 }
 

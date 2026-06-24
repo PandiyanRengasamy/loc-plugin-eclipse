@@ -89,13 +89,16 @@ public class LocReportView extends ViewPart {
     private static final int COL_HUMAN_LOC_PCT  = 14;
     private static final int COL_HUMAN_LOC      = 15;
     private static final int COL_GENAI_LOC      = 16;
+    private static final int COL_INPUT_TOKENS   = 17;
+    private static final int COL_OUTPUT_TOKENS  = 18;
 
     private static final String[] COLUMN_NAMES = {
             "ID", "Timestamp", "File", "Tool",
             "Lines +", "Lines ~", "Lines -",
             "GenAI", "Model", "Agent", "Location",
             "Files Updated", "Files Added", "Files Deleted",
-            "Human LOC %", "Human LOC", "GenAI LOC"
+            "Human LOC %", "Human LOC", "GenAI LOC",
+            "Input Tokens", "Output Tokens"
     };
 
     // ── Filter controls ───────────────────────────────────────────────────────
@@ -117,6 +120,8 @@ public class LocReportView extends ViewPart {
     private Label lblTotalFilesUpdated;
     private Label lblTotalFilesAdded;
     private Label lblTotalFilesDeleted;
+    private Label lblTotalInputTokens;
+    private Label lblTotalOutputTokens;
     private Label lblStatus;
 
     // ── Human LOC % controls ─────────────────────────────────────────────────
@@ -200,8 +205,10 @@ public class LocReportView extends ViewPart {
         lblTotalFilesAdded   = createCard(cards, "Files Added");
 
         lblTotalFilesDeleted = createCard(cards, "Files Deleted");
+        lblTotalInputTokens  = createCard(cards, "Input Tokens");
+        lblTotalOutputTokens = createCard(cards, "Output Tokens");
         // Fill remaining slots so the grid stays aligned at 5 columns.
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             new Label(cards, SWT.NONE);
         }
     }
@@ -276,7 +283,8 @@ public class LocReportView extends ViewPart {
                          60, 60, 60,
                          60, 110, 110, 130,
                          100, 100, 100,
-                         90, 90, 90 };
+                         90, 90, 90,
+                         100, 100 };
         for (int i = 0; i < COLUMN_NAMES.length; i++) {
             TableColumn col = new TableColumn(eventsTable, SWT.NONE);
             col.setText(COLUMN_NAMES[i]);
@@ -495,6 +503,8 @@ public class LocReportView extends ViewPart {
             item.setText(COL_HUMAN_LOC_PCT,  String.valueOf(humanPct));
             item.setText(COL_HUMAN_LOC,      String.format("%.2f", humanLoc));
             item.setText(COL_GENAI_LOC,      String.format("%.2f", genAiLoc));
+            item.setText(COL_INPUT_TOKENS,   String.valueOf(intOf(obj, "inputTokens")));
+            item.setText(COL_OUTPUT_TOKENS,  String.valueOf(intOf(obj, "outputTokens")));
         }
         updateSummaryFromTable();
     }
@@ -511,6 +521,8 @@ public class LocReportView extends ViewPart {
         lblTotalFilesUpdated.setText("N/A");
         lblTotalFilesAdded.setText("N/A");
         lblTotalFilesDeleted.setText("N/A");
+        lblTotalInputTokens.setText("N/A");
+        lblTotalOutputTokens.setText("N/A");
     }
 
     /** Mirrors {@code LocReportPanel#updateSummaryFromTable} in the IntelliJ plugin. */
@@ -519,6 +531,7 @@ public class LocReportView extends ViewPart {
         int genAi = 0, manual = 0;
         int linesAdded = 0, linesModified = 0, linesDeleted = 0;
         int filesUpdated = 0, filesAdded = 0, filesDeleted = 0;
+        int inputTokens = 0, outputTokens = 0;
         double humanLoc = 0.0, genAiLoc = 0.0;
 
         for (int i = 0; i < rowCount; i++) {
@@ -534,6 +547,8 @@ public class LocReportView extends ViewPart {
             filesUpdated  += toInt(r.getText(COL_FILES_UPDATED));
             filesAdded    += toInt(r.getText(COL_FILES_ADDED));
             filesDeleted  += toInt(r.getText(COL_FILES_DELETED));
+            inputTokens   += toInt(r.getText(COL_INPUT_TOKENS));
+            outputTokens  += toInt(r.getText(COL_OUTPUT_TOKENS));
             humanLoc      += Math.max(0, toDouble(r.getText(COL_HUMAN_LOC)));
             genAiLoc      += Math.max(0, toDouble(r.getText(COL_GENAI_LOC)));
         }
@@ -553,6 +568,8 @@ public class LocReportView extends ViewPart {
         lblTotalFilesUpdated.setText(String.valueOf(filesUpdated));
         lblTotalFilesAdded.setText(String.valueOf(filesAdded));
         lblTotalFilesDeleted.setText(String.valueOf(filesDeleted));
+        lblTotalInputTokens.setText(String.valueOf(inputTokens));
+        lblTotalOutputTokens.setText(String.valueOf(outputTokens));
     }
 
     private static double clampPct(double v) {
